@@ -1,0 +1,16 @@
+(executable
+  (public_name ex2_1)
+  (name ex2_1)
+  (modules ex2_1)
+  (libraries exercises))
+
+(executable
+  (public_name ex2_2)
+  (name ex2_2)
+  (modules ex2_2)
+  (libraries exercises))
+
+; (executable
+;   (name scratch)
+;   (modules scratch)
+;   (libraries dolphiler))
