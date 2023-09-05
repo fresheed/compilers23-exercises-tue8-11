@@ -10,7 +10,11 @@
   (modules ex2_2)
   (libraries exercises))
 
-; (executable
-;   (name scratch)
-;   (modules scratch)
-;   (libraries dolphiler))
+;; You can uncomment this part during development to suppress 'unused' warnings.
+;; Don't forget to comment it out back when the development is done. 
+;; Numbers correspond to identifiers of warnings that are listed in 'ocamlc' man entrance
+; (env
+;   (dev
+;     (flags (:standard -w -37 -w -32))
+;     )
+; )
