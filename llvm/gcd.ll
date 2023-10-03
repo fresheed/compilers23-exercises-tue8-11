@@ -1,68 +1,69 @@
 declare void @error_div_by_zero()
 
-; define i64 @f_mod(i64 %a, i64 %b) {
-;     %m = srem i64 %a, %b
-;     ret i64 %m
-; }
-
-define i64 @f_mod(i64 %a, i64 %b) {
-    %z = icmp eq i64 %b, 0
-    br i1 %z, label %zero, label %nzero
-zero:
+; assume that a>=0, b>=0
+define i64 @f_mod_rec(i64 %a, i64 %b){
+    %d = icmp eq i64 %b, 0
+    br i1 %d, label %b0, label %bn0
+b0:
     call void @error_div_by_zero()
     unreachable
-nzero:
-    %d = sdiv i64 %a, %b
-    %p = mul i64 %b, %d
-    %m = sub i64 %a, %p
-    ret i64 %m
-}
-
-
-define i64 @gcd_rec(i64 %a, i64 %b) {
-    %z = icmp eq i64 %b, 0
-    br i1 %z, label %zero, label %nzero
-zero:
+bn0:
+    ; compare: a<b
+    %c = icmp slt i64 %a, %b
+    ; jump depending on (a<b) result
+    br i1 %c, label %lt, label %ge
+lt:
     ret i64 %a
-nzero:
-    %r = call i64 @f_mod (i64 %a, i64 %b)
-    %g = call i64 @gcd_rec(i64 %b, i64 %r)
-    ret i64 %g
+ge:
+    ; a % b = (a-b) % b if a>=b
+    %a1 = sub i64 %a, %b
+    %r = call i64 @f_mod(i64 %a1, i64 %b)
+    ret i64 %r
 }
 
+define i64 @f_mod(i64 %a, i64 %b){
+    %d = icmp eq i64 %b, 0
+    br i1 %d, label %b0, label %bn0
+b0:
+    call void @error_div_by_zero()
+    unreachable
+bn0:
+    %q = sdiv i64 %a, %b
+    %p = mul i64 %b, %q
+    %r = sub i64 %a, %p
+    ret i64 %r
+}
+
+define i64 @gcd_rec(i64 %a, i64 %b){
+    %zero = icmp eq i64 %b, 0
+    br i1 %zero, label %b0, label %bn0
+
+b0: 
+    ret i64 %a
+bn0:
+    %a1 = call i64 @f_mod (i64 %a, i64 %b)
+    %r = call i64 @gcd_rec (i64 %b, i64 %a1)
+    ret i64 %r
+}
 
 define i64 @gcd_loop(i64 %a, i64 %b){
-    %az = icmp eq i64 %a, 0
-    br i1 %az, label %ret_b, label %check_a
-ret_b:
-    ret i64 %b
-check_a:
-    %bz = icmp eq i64 %b, 0
-    br i1 %bz, label %ret_a, label %normal
-ret_a:
-    ret i64 %a
-normal:
     %ap = alloca i64
-    %bp = alloca i64
     store i64 %a, i64* %ap
+    %bp = alloca i64
     store i64 %b, i64* %bp
-    br label %pre_loop
-pre_loop:
-    %av = load i64, i64* %ap
-    %bv = load i64, i64* %bp   
-    %c = icmp eq i64 %av, %bv
-    br i1 %c, label %fin, label %loop
+    br label %loop
 loop:
-    %ga = icmp sgt i64 %av, %bv
-    br i1 %ga, label %decr_a, label %decr_b
-decr_a:
-    %a2 = sub i64 %av, %bv
-    store i64 %a2, i64* %ap
-    br label %pre_loop
-decr_b:
-    %b2 = sub i64 %bv, %av
-    store i64 %b2, i64* %bp
-    br label %pre_loop
-fin:
-    ret i64 %av
+    %b1 = load i64, i64* %bp
+    %zero = icmp eq i64 %b1, 0
+    br i1 %zero, label %after, label %iter
+iter:
+    %ai = load i64, i64* %ap
+    %bi = load i64, i64* %bp
+    %m = call i64 @f_mod (i64 %ai, i64 %bi)
+    store i64 %m, i64* %bp
+    store i64 %bi, i64* %ap
+    br label %loop
+after:
+    %res = load i64, i64* %ap
+    ret i64 %res
 }

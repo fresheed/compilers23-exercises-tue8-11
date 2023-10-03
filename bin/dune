@@ -10,11 +10,29 @@
   (modules ex2_2)
   (libraries exercises))
 
+(executable
+  (public_name euclid)
+  (name euclid)
+  (modules euclid)
+  (libraries exercises))
+
+(executable
+  (public_name ex5)
+  (name ex5)
+  (modules ex5)
+  (libraries util llvm))
+
+  (executable
+  (public_name ex6)
+  (name ex6)
+  (modules ex6)
+  (libraries util llvm))
+
 ;; You can uncomment this part during development to suppress 'unused' warnings.
 ;; Don't forget to comment it out back when the development is done. 
 ;; Numbers correspond to identifiers of warnings that are listed in 'ocamlc' man entrance
-; (env
-;   (dev
-;     (flags (:standard -w -37 -w -32))
-;     )
-; )
+(env
+  (dev
+    (flags (:standard -w -37 -w -32 -w -27))
+    )
+)

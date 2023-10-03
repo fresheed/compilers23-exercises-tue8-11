@@ -1,49 +1,50 @@
-/* save this as main.c */
 #include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h> 
 
 extern int f_mod(int a, int b);
 extern int gcd_rec(int a, int b);
 extern int gcd_loop(int a, int b);
 
-
-int gcd_rec_C(int a, int b){
-    if (b == 0){ 
-        return a;
-    } else {
-        return gcd_rec_C(b, a % b);
-    }
-}
-
-
 int main(int argc, char *argv[]) {
-    // if (argc != 3) {
-    //     printf("Please call this program with two arguments: %s <a> <b>\n", argv[0]);
-    //     return 1;
-    // }
-
-    // int a = atoi(argv[1]);
-    // int b = atoi(argv[2]);
-
-    // int result = f_mod(a, b);
-    // int result = gcd_rec(a, b);
-    int As[] = {0, 5, 10, 15, 20};
-    int Bs[] = {10, 10, 10, 10};
-
-    for (int i = 0; i < 5; i++){
-        int a = As[i], b = Bs[i];
-        int grL = gcd_rec(a, b);
-        int glL = gcd_loop(a, b);
-        int grC = gcd_rec_C(a, b);
-        printf("GCD(%i, %i) = C: {%i}, LLVM(rec): {%i}, LLVM(loop): {%i}\n", a, b, grC, grL, glL);
+/*     if (argc != 3) {
+        printf("Please call this program with two arguments: %s <a> <b>\n", argv[0]);
+        return 1;
     }
+
+    int a = atoi(argv[1]);
+    int b = atoi(argv[2]);
+ */
+    // int result = f_mod(10, 0);
+
+    int As[] = {10, 5, 15, 2, 0, 12};
+    int Bs[] = {10, 10, 10, 10, 10, 0};
+    int exps[] = {10, 5, 5, 2, 10, 12};
+
+    for (int i = 0; i < 6; i++){
+        int a = As[i], b = Bs[i], exp = exps[i];
+        int res_rec = gcd_rec(a, b), res_loop = gcd_loop(a, b);
+        printf("GCD(%i, %i): rec = %i, loop = %i, expected %i\n", a, b, res_rec, res_loop, exp);
+    }
+
 
     // printf("%d\n", result);
 
     return 0;
 }
 
-int error_div_by_zero () {
+void error_div_by_zero () {
     printf ("Error: division by zero\n");
     exit (1);
+}
+
+void print_integer (int64_t x) {
+    printf ("%d\n", x);
+}
+
+int64_t read_integer () {
+    int64_t value;
+    printf("Please enter an integer: ");
+    scanf("%" PRId64 "" , &value);
+    return value;
 }
