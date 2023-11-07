@@ -29,9 +29,9 @@
   (libraries util llvm))
 
 (executable
-  (public_name lex_test)
-  (name lex_test)
-  (modules lex_test)
+  (public_name compiler_tests)
+  (name compiler_tests)
+  (modules compiler_tests)
   (libraries util mylex))
 
 
