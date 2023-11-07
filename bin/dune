@@ -28,6 +28,13 @@
   (modules ex6)
   (libraries util llvm))
 
+(executable
+  (public_name lex_test)
+  (name lex_test)
+  (modules lex_test)
+  (libraries util mylex))
+
+
 ;; You can uncomment this part during development to suppress 'unused' warnings.
 ;; Don't forget to comment it out back when the development is done. 
 ;; Numbers correspond to identifiers of warnings that are listed in 'ocamlc' man entrance

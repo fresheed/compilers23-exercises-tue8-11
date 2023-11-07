@@ -1,0 +1,14 @@
+(library
+ (name mylex)
+ (libraries exercises unix)
+ )
+
+(ocamllex lexlex)
+
+
+
+(menhir
+ (merge_into parpar)
+ (modules parpar)
+ (flags --explain --dump)
+ )
